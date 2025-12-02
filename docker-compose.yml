@@ -25,7 +25,7 @@ services:
       PMA_HOST: mysql
       UPLOAD_LIMIT: 256M
     ports:
-      - "8080:80"
+      - "8888:80"
     networks:
       - task_network
 
