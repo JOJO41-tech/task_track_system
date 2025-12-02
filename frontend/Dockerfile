@@ -1,31 +1,25 @@
-# frontend/Dockerfile
-# Build stage
+# Stage 1 — build
 FROM node:20-alpine AS builder
 WORKDIR /app
-
+# Install build deps
 COPY package*.json ./
 RUN npm ci
+# Copy source and build
 COPY . .
-
-ARG API_HOST=http://api:5000
-ENV NEXT_PUBLIC_API_URL=${API_HOST}
-ENV NEXT_TELEMETRY_DISABLED=1
-
 RUN npm run build
 
-# Runtime stage (Next standalone)
+# Stage 2 — production image
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
+# copy package.json to install prod deps only
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# create non-root user
-RUN addgroup -S nextjs && adduser -S nextjs -G nextjs
-
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+# copy build output & public
+COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-
-USER nextjs
+COPY --from=builder /app/next.config.js ./next.config.js
+# expose port and run
 EXPOSE 3000
-CMD ["node", "server.js"]
+CMD ["npm", "start"]
