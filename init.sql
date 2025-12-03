@@ -16,3 +16,11 @@ CREATE TABLE tasks (
     user_id INT,
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
+
+INSERT INTO user (name, email, password) 
+VALUES ('JOJO', 'jojo@gmail.com', '$2b$10$nmKs0mm9MNM4E.n72pD4sODhHNbzZ/8mGUsFD9UcdC5i6F8Qdyv.m');
+
+INSERT INTO tasks (user_id, title, subject, description, due_date, status)
+VALUES
+(1, 'Math Homework', 'Mathematics', 'Complete algebra exercises', '2026-08-12', 'Overdue'),
+(1, 'Science Project', 'Science', 'Build AI model', '2026-12-19', 'In Progress');
