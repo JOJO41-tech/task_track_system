@@ -9,9 +9,10 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword123      # change to a secure password
-      MYSQL_DATABASE: task_db
+      MYSQL_DATABASE: personal_task_db
       MYSQL_USER: task_user
-      MYSQL_PASSWORD: task_user_password
+      MYSQL_PASSWORD: 6703466
+      MYSQL_ROOT_HOST: '%'
     volumes:
       - db_data:/var/lib/mysql
     ports:
@@ -38,7 +39,7 @@ services:
       DB_HOST: mysql
       DB_USER: task_user
       DB_PASSWORD: task_user_password
-      DB_NAME: task_db
+      DB_NAME: personal_task_db
       # any other env vars your backend needs
     ports:
       - "5000:5000"
@@ -68,9 +69,8 @@ services:
     environment:
       PMA_HOST: mysql            # <--- must match the mysql service name
       PMA_PORT: 3306
-      # optionally:
-      # PMA_USER: root
-      # PMA_PASSWORD: rootpassword123
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword123
     depends_on:
       mysql:
         condition: service_healthy
