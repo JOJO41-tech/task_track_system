@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  triggers {
+    pollSCM('H/2 * * * *')
+  }
+
   environment {
     COMPOSE_HTTP_TIMEOUT = 200
   }
@@ -8,6 +12,31 @@ pipeline {
   stages {
     stage('Checkout') {
       steps { checkout scm }
+    }
+
+    stage('Prepare .env') {
+      steps {
+        sh '''
+          set -e
+          if [ ! -f .env ]; then
+            cat > .env <<EOF
+MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-rootpassword123}
+MYSQL_DATABASE=${MYSQL_DATABASE:-personal_task_db}
+MYSQL_USER=${MYSQL_USER:-task_user}
+MYSQL_PASSWORD=${MYSQL_PASSWORD:-6703466}
+DB_HOST=${DB_HOST:-mysql}
+DB_USER=${DB_USER:-task_user}
+DB_PASSWORD=${DB_PASSWORD:-6703466}
+DB_NAME=${DB_NAME:-personal_task_db}
+NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:5000}
+JWT_SECRET=${JWT_SECRET:-default_secret_key}
+EOF
+            echo ".env created"
+          else
+            echo ".env already present"
+          fi
+        '''
+      }
     }
 
     stage('Docker Compose Config') {
