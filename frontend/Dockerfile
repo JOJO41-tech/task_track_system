@@ -19,7 +19,7 @@ RUN npm ci --omit=dev
 # copy build output & public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
+COPY --from=builder /app/next.config.mjs ./next.config.mjs
 # expose port and run
 EXPOSE 3000
 CMD ["npm", "start"]
