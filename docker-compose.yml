@@ -38,7 +38,7 @@ services:
     environment:
       DB_HOST: mysql
       DB_USER: task_user
-      DB_PASSWORD: task_user_password
+      DB_PASSWORD: 6703466
       DB_NAME: personal_task_db
       # any other env vars your backend needs
     ports:
